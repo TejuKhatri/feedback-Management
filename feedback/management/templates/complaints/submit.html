@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{% if edit_mode %}Edit Complaint{% else %}Submit Complaint{% endif %}{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2 class="h1">{% if edit_mode %}Edit Complaint{% else %}Submit Complaint{% endif %}</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-green">{% if edit_mode %}Update{% else %}Submit{% endif %}</button>
+      <a class="btn btn-light" href="{% url 'my_complaints' %}">Back</a>
+    </form>
+  </div>
+{% endblock %}

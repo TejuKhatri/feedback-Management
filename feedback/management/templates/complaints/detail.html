@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Complaint Detail{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2 class="h1">{{ c.title }}</h2>
+    <p><strong>Status:</strong> <span class="pill {{ c.status }}">{{ c.get_status_display }}</span></p>
+    <p><strong>Description:</strong><br>{{ c.description }}</p>
+
+    {% if c.admin_note %}
+      <p><strong>Admin Note / Resolution:</strong><br>{{ c.admin_note }}</p>
+    {% endif %}
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+      <a class="btn btn-light" href="{% url 'my_complaints' %}">Back</a>
+      {% if user == c.user and c.status != "resolved" %}
+        <a class="btn" href="{% url 'edit_complaint' c.id %}">Edit</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if admin_form %}
+    <div class="card">
+      <h3 class="h1" style="font-size:18px;">Admin Update</h3>
+      <form method="post">
+        {% csrf_token %}
+        {{ admin_form.as_p }}
+        <button class="btn btn-green">Save</button>
+        <a class="btn btn-light" href="{% url 'admin_complaints' %}">Back</a>
+      </form>
+
+      <form method="post" action="{% url 'admin_delete_complaint' c.id %}" style="margin-top:12px;">
+        {% csrf_token %}
+        <button class="btn btn-danger">Delete Complaint</button>
+      </form>
+    </div>
+  {% endif %}
+
+  {% if confirm_delete %}
+    <div class="card">
+      <h3 class="h1" style="font-size:18px;">Confirm Delete</h3>
+      <p class="muted">Are you sure you want to delete this complaint?</p>
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger">Yes, Delete</button>
+        <a class="btn btn-light" href="{% url 'admin_complaints' %}">Cancel</a>
+      </form>
+    </div>
+  {% endif %}
+{% endblock %}
